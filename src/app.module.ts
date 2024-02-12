@@ -2,6 +2,8 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { Module } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { Quiz } from './models/Quiz';
+import { QuizesModule } from './modules/quizes.module';
 
 @Module({
   imports: [
@@ -16,10 +18,11 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       username: 'postgres',
       password: 'postgres',
       database: 'postgres',
-      entities: [],
+      entities: [Quiz],
       synchronize: true,
       autoLoadEntities: true,
     }),
+    QuizesModule,
   ],
   controllers: [],
   providers: [],
