@@ -4,6 +4,8 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Quiz } from './models/Quiz';
 import { QuizesModule } from './modules/quizes.module';
+import { QuestionsModule } from './modules/questions.module';
+import { Question } from './models/Question';
 
 @Module({
   imports: [
@@ -18,11 +20,12 @@ import { QuizesModule } from './modules/quizes.module';
       username: 'postgres',
       password: 'postgres',
       database: 'postgres',
-      entities: [Quiz],
+      entities: [Quiz, Question],
       synchronize: true,
       autoLoadEntities: true,
     }),
     QuizesModule,
+    QuestionsModule,
   ],
   controllers: [],
   providers: [],

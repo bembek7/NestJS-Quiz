@@ -1,14 +1,18 @@
-import { ObjectType, Field, Int } from '@nestjs/graphql';
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { ObjectType, Field, ID } from '@nestjs/graphql';
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
+import { Question } from './Question';
 
 @Entity({ name: 'quizes' })
 @ObjectType()
 export class Quiz {
   @PrimaryGeneratedColumn()
-  @Field(type => Int)
-  id: number;
+  @Field(type => ID)
+  id: string;
 
   @Column()
   @Field()
   name: string;
+
+  @OneToMany(type => Question, question => question.quiz)
+  questions: Question[];
 }
