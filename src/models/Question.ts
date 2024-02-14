@@ -42,10 +42,6 @@ export class Question {
   @Field({ nullable: true })
   dAnswer: string;
 
-  @Column({ nullable: true })
-  @Field({ nullable: true })
-  textAnswer: string;
-
   @Column()
   @Field(type => QuestionType)
   questionType: QuestionType;
