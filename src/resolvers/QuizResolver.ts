@@ -1,5 +1,4 @@
 import { Resolver, Query, Args, Mutation } from '@nestjs/graphql';
-
 import { QuizService } from 'src/services/QuizService';
 import { Quiz } from 'src/models/Quiz';
 import { CreateQuizInput } from 'src/input types/CreateQuizType';
