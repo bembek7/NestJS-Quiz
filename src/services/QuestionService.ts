@@ -13,4 +13,23 @@ export class QuestionService {
   async getQuestions() {
     return this.questionsRepository.find();
   }
+
+  async getQuestionsByQuizId(quizId: string) {
+    return this.questionsRepository.findBy({ quizId });
+  }
+
+  async getQuestionsByQuizName(quizName: string) {
+    return this.questionsRepository.find({
+      relations: ['quiz'],
+      where: {
+        quiz: {
+          name: quizName,
+        },
+      },
+    });
+  }
+
+  async deleteAllQuestions() {
+    return this.questionsRepository.clear();
+  }
 }
