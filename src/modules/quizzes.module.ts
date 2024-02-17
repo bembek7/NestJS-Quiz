@@ -9,4 +9,4 @@ import { QuizService } from 'src/services/QuizService';
   imports: [TypeOrmModule.forFeature([Quiz, Question])],
   providers: [QuizResolver, QuizService],
 })
-export class QuizesModule {}
+export class QuizzesModule {}

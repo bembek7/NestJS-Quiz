@@ -3,7 +3,7 @@ import { Module } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Quiz } from './models/Quiz';
-import { QuizesModule } from './modules/quizes.module';
+import { QuizzesModule } from './modules/quizzes.module';
 import { QuestionsModule } from './modules/questions.module';
 import { Question } from './models/Question';
 
@@ -24,7 +24,7 @@ import { Question } from './models/Question';
       synchronize: true,
       autoLoadEntities: true,
     }),
-    QuizesModule,
+    QuizzesModule,
     QuestionsModule,
   ],
   controllers: [],

@@ -54,7 +54,7 @@ export class Question {
   @Field(type => ID)
   quizId: string;
 
-  @ManyToOne(type => Quiz, quiz => quiz.questions)
+  @ManyToOne(type => Quiz, quiz => quiz.questions, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'quizId' })
   quiz: Quiz;
 }

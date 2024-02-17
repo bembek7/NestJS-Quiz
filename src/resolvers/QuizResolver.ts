@@ -8,12 +8,17 @@ export class QuizResolver {
   constructor(private quizService: QuizService) {}
 
   @Query(returns => [Quiz])
-  getQuizes() {
-    return this.quizService.getQuizes();
+  getQuizzes() {
+    return this.quizService.getQuizzes();
   }
 
   @Mutation(returns => Quiz)
   createQuiz(@Args('createQuizData') createQuizData: CreateQuizInput) {
     return this.quizService.createQuiz(createQuizData);
+  }
+
+  @Mutation(returns => [Quiz], { nullable: true })
+  deleteAllQuizzes() {
+    return this.quizService.deleteAllQuizzes();
   }
 }

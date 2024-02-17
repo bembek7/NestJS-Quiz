@@ -8,19 +8,19 @@ import { CreateQuizInput } from 'src/input types/CreateQuizType';
 @Injectable()
 export class QuizService {
   constructor(
-    @InjectRepository(Quiz) private quizesRepository: Repository<Quiz>,
+    @InjectRepository(Quiz) private quizzesRepository: Repository<Quiz>,
     @InjectRepository(Question)
     private questionsRepository: Repository<Question>,
   ) {}
 
-  async getQuizes() {
-    return this.quizesRepository.find();
+  async getQuizzes() {
+    return this.quizzesRepository.find();
   }
 
   async createQuiz(createQuizData: CreateQuizInput) {
     const { quiz, questions } = createQuizData;
-    const newQuiz = this.quizesRepository.create(quiz);
-    const savedQuiz = await this.quizesRepository.save(newQuiz);
+    const newQuiz = this.quizzesRepository.create(quiz);
+    const savedQuiz = await this.quizzesRepository.save(newQuiz);
 
     for (const question of questions) {
       const newQuestion = {
@@ -31,5 +31,13 @@ export class QuizService {
     }
 
     return savedQuiz;
+  }
+
+  async deleteAllQuizzes() {
+    const quizzes = await this.quizzesRepository.find();
+    for (const quiz of quizzes) {
+      await this.quizzesRepository.remove(quiz);
+    }
+    return quizzes;
   }
 }
