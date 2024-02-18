@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Question, QuestionType } from 'src/models/Question';
@@ -32,11 +32,17 @@ export class QuestionService {
   }
 
   async getQuestionsByQuizId(quizId: string) {
-    return this.questionsRepository.findBy({ quizId });
+    const questions = await this.questionsRepository.findBy({ quizId });
+    if (questions.length === 0) {
+      throw new BadRequestException(
+        'Could not find a questions of quiz with that id.',
+      );
+    }
+    return questions;
   }
 
   async getQuestionsByQuizName(quizName: string) {
-    return this.questionsRepository.find({
+    const questions = await this.questionsRepository.find({
       relations: ['quiz'],
       where: {
         quiz: {
@@ -44,11 +50,15 @@ export class QuestionService {
         },
       },
     });
+    if (questions.length === 0) {
+      throw new BadRequestException(
+        'Could not find a questions of quiz with that name.',
+      );
+    }
+    return questions;
   }
 
   async getScore(quizId: string, answers: [string]) {
-    console.log(quizId);
-    console.log(answers);
     let score = 0;
     const questions = await this.getQuestionsByQuizId(quizId);
     for (
@@ -59,16 +69,33 @@ export class QuestionService {
       const question = questions[index];
       const answer = stringToAnswer(answers[index]);
       const rightAnswer = stringToAnswer(question.rightAnswer);
-      switch (
-        question.questionType // for input validation
-      ) {
+
+      // input validation
+      switch (question.questionType) {
+        // empty string is always allowed since user may just not answer the question
+        // not restricted to a, b, c, d characters since question may use other type of enumeration
         case QuestionType.SingleAnswer: {
+          if (answer.length > 1) {
+            throw new BadRequestException(
+              "Answer for a single correct answer type of question should be 1 character long f.e. 'a' ",
+            );
+          }
           break;
         }
         case QuestionType.MultipleAnswer: {
+          if (answer.length > 4) {
+            throw new BadRequestException(
+              "Answer for a multiple correct answer type of question should be 1-4 characters long f.e. 'abc' ",
+            );
+          }
           break;
         }
         case QuestionType.Sort: {
+          if (answer.length !== 4 && answer.length !== 0) {
+            throw new BadRequestException(
+              "Answer for a single correct answer type of question should be 4 characters long f.e. 'dcba' ",
+            );
+          }
           break;
         }
         case QuestionType.TextAnswer: {
