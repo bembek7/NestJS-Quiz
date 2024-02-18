@@ -1,5 +1,5 @@
 import { Resolver, Query, Args, Mutation } from '@nestjs/graphql';
-import { QuizService } from 'src/services/QuizService';
+import { DeletionOutput, QuizService } from 'src/services/QuizService';
 import { Quiz } from 'src/models/Quiz';
 import { CreateQuizInput } from 'src/input types/CreateQuizType';
 
@@ -17,7 +17,7 @@ export class QuizResolver {
     return this.quizService.createQuiz(createQuizData);
   }
 
-  @Mutation(returns => [Quiz], { nullable: true })
+  @Mutation(returns => DeletionOutput)
   deleteAllQuizzes() {
     return this.quizService.deleteAllQuizzes();
   }

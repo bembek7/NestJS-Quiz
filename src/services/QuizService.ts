@@ -4,6 +4,16 @@ import { Repository } from 'typeorm';
 import { Quiz } from 'src/models/Quiz';
 import { Question } from 'src/models/Question';
 import { CreateQuizInput } from 'src/input types/CreateQuizType';
+import { Field, Int, ObjectType } from '@nestjs/graphql';
+
+@ObjectType()
+export class DeletionOutput {
+  @Field(type => Int)
+  quizzesDeleted: number;
+
+  @Field()
+  message: string;
+}
 
 @Injectable()
 export class QuizService {
@@ -35,9 +45,16 @@ export class QuizService {
 
   async deleteAllQuizzes() {
     const quizzes = await this.quizzesRepository.find();
+    const quizzesNr = quizzes.length;
     for (const quiz of quizzes) {
       await this.quizzesRepository.remove(quiz);
     }
-    return quizzes;
+
+    const out: DeletionOutput = {
+      quizzesDeleted: quizzesNr,
+      message: `Successfully deleted ${quizzesNr} quizzes.`,
+    };
+
+    return out;
   }
 }
