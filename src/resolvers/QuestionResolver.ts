@@ -1,6 +1,6 @@
 import { Args, ID, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { Question } from 'src/models/Question';
-import { QuestionService } from 'src/services/QuestionService';
+import { QuestionService, Score } from 'src/services/QuestionService';
 
 @Resolver((of) => Question)
 export class QuestionResolver {
@@ -21,6 +21,14 @@ export class QuestionResolver {
     @Args('quizName', { type: () => String }) quizName: string,
   ) {
     return this.questionService.getQuestionsByQuizName(quizName);
+  }
+
+  @Query(returns => Score)
+  getScore(
+    @Args('quizId', { type: () => ID }) quizId: string,
+    @Args('answers', { type: () => [String] }) answers: [string],
+  ) {
+    return this.questionService.getScore(quizId, answers);
   }
 
   @Mutation(returns => [Question], { nullable: true })
