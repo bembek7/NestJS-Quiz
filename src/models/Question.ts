@@ -26,29 +26,17 @@ export class Question {
   @Field()
   body: string;
 
-  @Column({ nullable: true })
-  @Field({ nullable: true })
-  aAnswer: string;
-
-  @Column({ nullable: true })
-  @Field({ nullable: true })
-  bAnswer: string;
-
-  @Column({ nullable: true })
-  @Field({ nullable: true })
-  cAnswer: string;
-
-  @Column({ nullable: true })
-  @Field({ nullable: true })
-  dAnswer: string;
+  @Column({ nullable: true, type: 'text', array: true })
+  @Field(type => [String], { nullable: true })
+  answers: [string];
 
   @Column()
   @Field(type => QuestionType)
   questionType: QuestionType;
 
-  @Column()
-  @Field()
-  rightAnswer: string;
+  @Column({ type: 'text', array: true })
+  @Field(type => [String])
+  rightAnswers: [string];
 
   @Column()
   @Field(type => ID)

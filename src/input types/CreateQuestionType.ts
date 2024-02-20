@@ -6,21 +6,12 @@ export class CreateQuestionInput {
   @Field()
   body: string;
 
-  @Field({ nullable: true })
-  aAnswer: string;
-
-  @Field({ nullable: true })
-  bAnswer: string;
-
-  @Field({ nullable: true })
-  cAnswer: string;
-
-  @Field({ nullable: true })
-  dAnswer: string;
+  @Field(type => [String], { nullable: true })
+  answers: [string];
 
   @Field(type => QuestionType)
   questionType: QuestionType;
 
-  @Field()
-  rightAnswer: string;
+  @Field(type => [String])
+  rightAnswers: [string];
 }
