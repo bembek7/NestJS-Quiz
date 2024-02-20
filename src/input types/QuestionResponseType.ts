@@ -6,5 +6,5 @@ export class QuestionResponse {
   questionId: string;
 
   @Field(type => [String])
-  answers: [string];
+  answers: string[];
 }

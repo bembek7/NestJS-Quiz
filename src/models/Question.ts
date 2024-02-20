@@ -1,4 +1,3 @@
-import { ObjectType, Field, ID } from '@nestjs/graphql';
 import {
   Entity,
   Column,
@@ -6,6 +5,7 @@ import {
   ManyToOne,
   JoinColumn,
 } from 'typeorm';
+import { ObjectType, Field, ID } from '@nestjs/graphql';
 import { Quiz } from './Quiz';
 
 export enum QuestionType {
@@ -28,7 +28,7 @@ export class Question {
 
   @Column({ nullable: true, type: 'text', array: true })
   @Field(type => [String], { nullable: true })
-  answers: [string];
+  answers: string[];
 
   @Column()
   @Field(type => QuestionType)
@@ -36,7 +36,7 @@ export class Question {
 
   @Column({ type: 'text', array: true })
   @Field(type => [String])
-  rightAnswers: [string];
+  rightAnswers: string[];
 
   @Column()
   @Field(type => ID)

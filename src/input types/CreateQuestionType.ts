@@ -7,11 +7,11 @@ export class CreateQuestionInput {
   body: string;
 
   @Field(type => [String], { nullable: true })
-  answers: [string];
+  answers: string[];
 
   @Field(type => QuestionType)
   questionType: QuestionType;
 
   @Field(type => [String])
-  rightAnswers: [string];
+  rightAnswers: string[];
 }

@@ -1,9 +1,9 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Question, QuestionType } from 'src/models/Question';
+import { Question, QuestionType } from '../models/Question';
 import { Field, Int, ObjectType } from '@nestjs/graphql';
-import { QuestionResponse } from 'src/input types/QuestionResponseType';
+import { QuestionResponse } from '../input types/QuestionResponseType';
 
 function stringToAnswer(input: string): string {
   input = input.replace(/[^\w']+/g, '');
@@ -34,7 +34,7 @@ export class QuestionService {
 
   async getQuestionsByQuizId(quizId: string) {
     const questions = await this.questionsRepository.findBy({ quizId });
-    if (questions.length === 0) {
+    if (!questions || questions.length === 0) {
       throw new BadRequestException(
         'Could not find a questions of quiz with that id.',
       );
@@ -59,7 +59,7 @@ export class QuestionService {
     return questions;
   }
 
-  async getScore(quizId: string, responses: [QuestionResponse]) {
+  async getScore(quizId: string, responses: QuestionResponse[]) {
     let score = 0;
     const questions = await this.getQuestionsByQuizId(quizId);
 
