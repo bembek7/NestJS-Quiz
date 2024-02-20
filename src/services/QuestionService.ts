@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Question, QuestionType } from 'src/models/Question';
 import { Field, Int, ObjectType } from '@nestjs/graphql';
+import { QuestionResponse } from 'src/input types/QuestionResponseType';
 
 function stringToAnswer(input: string): string {
   input = input.replace(/[^\w']+/g, '');
@@ -58,53 +59,111 @@ export class QuestionService {
     return questions;
   }
 
-  async getScore(quizId: string, answers: [string]) {
+  async getScore(quizId: string, responses: [QuestionResponse]) {
     let score = 0;
     const questions = await this.getQuestionsByQuizId(quizId);
-    for (
-      let index = 0;
-      index < questions.length && index < answers.length;
-      index++
-    ) {
-      const question = questions[index];
-      const answer = stringToAnswer(answers[index]);
-      const rightAnswer = stringToAnswer(question.rightAnswer);
+
+    if (questions.length !== responses.length) {
+      throw new BadRequestException(
+        'List of responses should have the same length as list of questions does.',
+      );
+    }
+    let responseCounter = 0;
+    for (const response of responses) {
+      responseCounter++;
+      const question = questions.find(
+        (question) => question.id == response.questionId,
+      );
+      if (!question) {
+        throw new BadRequestException(
+          `Could not find question with that id. Response nr ${responseCounter}`,
+        );
+      }
+
+      let noScore = false;
 
       // input validation
       switch (question.questionType) {
         // empty string is always allowed since user may just not answer the question
         // not restricted to a, b, c, d characters since question may use other type of enumeration
         case QuestionType.SingleAnswer: {
-          if (answer.length > 1) {
+          if (response.answers.length > 1) {
             throw new BadRequestException(
-              "Answer for a single correct answer type of question should be 1 character long f.e. 'a' ",
+              `Array of answers for a single correct answer type of question should have the size of 1. Response nr ${responseCounter}`,
             );
+          }
+          if (
+            stringToAnswer(response.answers[0]) !==
+            stringToAnswer(question.rightAnswers[0])
+          ) {
+            noScore = true;
+            break;
           }
           break;
         }
         case QuestionType.MultipleAnswer: {
-          if (answer.length > 4) {
+          if (
+            response.answers.length > question.answers.length ||
+            response.answers.length < 1
+          ) {
             throw new BadRequestException(
-              "Answer for a multiple correct answer type of question should be 1-4 characters long f.e. 'abc' ",
+              `Array of answers for a multiple correct answer type of question should have the size of 1-(number of possible answers). Response nr ${responseCounter}`,
             );
+          }
+          if (response.answers.length !== question.rightAnswers.length) {
+            noScore = true;
+            break;
+          }
+          for (const answer of response.answers) {
+            if (
+              !question.rightAnswers.find(
+                (rightAnswer) =>
+                  stringToAnswer(rightAnswer) === stringToAnswer(answer),
+              )
+            ) {
+              noScore = true;
+              break;
+            }
           }
           break;
         }
         case QuestionType.Sort: {
-          if (answer.length !== 4 && answer.length !== 0) {
+          if (
+            response.answers.length !== question.answers.length &&
+            response.answers.length !== 0
+          ) {
             throw new BadRequestException(
-              "Answer for a single correct answer type of question should be 4 characters long f.e. 'dcba' ",
+              `Array of answers for a sort answers type of question should have the size of (number of possible answers). Response nr ${responseCounter}`,
             );
+          }
+          for (let index = 0; index < response.answers.length; index++) {
+            const answer = response.answers[index];
+            const rightAnswer = question.rightAnswers[index];
+            if (stringToAnswer(answer) !== stringToAnswer(rightAnswer)) {
+              noScore = true;
+              break;
+            }
           }
           break;
         }
         case QuestionType.TextAnswer: {
+          if (response.answers.length > 1) {
+            throw new BadRequestException(
+              `Array of answers for a text answer type of question should have the size of 1. Response nr ${responseCounter}`,
+            );
+          }
+          if (
+            stringToAnswer(response.answers[0]) !==
+            stringToAnswer(question.rightAnswers[0])
+          ) {
+            noScore = true;
+            break;
+          }
           break;
         }
       }
-      if (answer === rightAnswer) {
-        score++;
-      }
+
+      if (!noScore) score++;
     }
 
     const scoreMax = questions.length;
