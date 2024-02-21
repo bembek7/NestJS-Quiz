@@ -1,9 +1,9 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Quiz } from 'src/models/Quiz';
-import { Question, QuestionType } from 'src/models/Question';
-import { CreateQuizInput } from 'src/input types/CreateQuizType';
+import { Quiz } from '../models/Quiz';
+import { Question, QuestionType } from '../models/Question';
+import { CreateQuizInput } from '../input types/CreateQuizType';
 import { Field, Int, ObjectType } from '@nestjs/graphql';
 
 @ObjectType()
@@ -54,7 +54,7 @@ export class QuizService {
             question.rightAnswers.length < 1
           ) {
             throw new BadRequestException(
-              `Array of answers for a multiple correct answer type of question must have the size of 1-(number of possible answers). Question nr ${questionNr} `,
+              `Array of answers for a multiple correct answer type of question must have the size of 1-(number of possible answers). Question nr ${questionNr}`,
             );
           }
           if (question.answers.length < 2) {
