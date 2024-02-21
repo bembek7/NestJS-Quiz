@@ -119,6 +119,258 @@ describe('QuestionService', () => {
     ).rejects.toHaveProperty('message', expectedErrorMessage);
   });
 
+  it('a', async () => {
+    const mockQuestions: Question[] = [
+      {
+        id: '1',
+        body: 'What is the capital of France?',
+        answers: ['Berlin', 'Madrid', 'Paris', 'Rome'],
+        questionType: QuestionType.SingleAnswer,
+        rightAnswers: ['Paris'],
+        quizId: '1',
+        quiz: null,
+      },
+      {
+        id: '2',
+        body: 'Which programming language is used for NestJS?',
+        answers: ['Java', 'Python', 'TypeScript', 'C#'],
+        questionType: QuestionType.SingleAnswer,
+        rightAnswers: ['TypeScript'],
+        quizId: '1',
+        quiz: null,
+      },
+    ];
+
+    const responses: QuestionResponse[] = [
+      {
+        questionId: '1',
+        answers: ['Paris'],
+      },
+      {
+        questionId: '2',
+        answers: ['TypeScript'],
+      },
+      {
+        questionId: '3',
+        answers: ['blah blah'],
+      },
+    ];
+
+    jest
+      .spyOn(questionRepository, 'findBy')
+      .mockResolvedValueOnce(mockQuestions);
+
+    expect(service.getScore('mockQuizId', responses)).rejects.toThrow(
+      BadRequestException,
+    );
+
+    jest
+      .spyOn(questionRepository, 'findBy')
+      .mockResolvedValueOnce(mockQuestions);
+    const expectedErrorMessage =
+      'List of responses should have the same length as list of questions does.';
+
+    await expect(
+      service.getScore('mockQuizId', responses),
+    ).rejects.toHaveProperty('message', expectedErrorMessage);
+  });
+
+  it('b', async () => {
+    const mockQuestions: Question[] = [
+      {
+        id: '1',
+        body: 'What is the capital of France?',
+        answers: ['Berlin', 'Madrid', 'Paris', 'Rome'],
+        questionType: QuestionType.SingleAnswer,
+        rightAnswers: ['Paris'],
+        quizId: '1',
+        quiz: null,
+      },
+    ];
+
+    const responses: QuestionResponse[] = [
+      {
+        questionId: '2888',
+        answers: ['TypeScript'],
+      },
+    ];
+
+    jest
+      .spyOn(questionRepository, 'findBy')
+      .mockResolvedValueOnce(mockQuestions);
+
+    expect(service.getScore('mockQuizId', responses)).rejects.toThrow(
+      BadRequestException,
+    );
+
+    jest
+      .spyOn(questionRepository, 'findBy')
+      .mockResolvedValueOnce(mockQuestions);
+
+    const expectedErrorMessage =
+      'Could not find question with that id. Response nr 1';
+
+    await expect(
+      service.getScore('mockQuizId', responses),
+    ).rejects.toHaveProperty('message', expectedErrorMessage);
+  });
+
+  it('c', async () => {
+    const mockQuestions: Question[] = [
+      {
+        id: '1',
+        body: 'What is the capital of France?',
+        answers: ['Berlin', 'Madrid', 'Paris', 'Rome'],
+        questionType: QuestionType.SingleAnswer,
+        rightAnswers: ['Paris'],
+        quizId: '1',
+        quiz: null,
+      },
+    ];
+
+    const responses: QuestionResponse[] = [
+      {
+        questionId: '1',
+        answers: ['Paris', 'Rome'],
+      },
+    ];
+
+    jest
+      .spyOn(questionRepository, 'findBy')
+      .mockResolvedValueOnce(mockQuestions);
+
+    expect(service.getScore('mockQuizId', responses)).rejects.toThrow(
+      BadRequestException,
+    );
+
+    jest
+      .spyOn(questionRepository, 'findBy')
+      .mockResolvedValueOnce(mockQuestions);
+    const expectedErrorMessage =
+      'Array of answers for a single correct answer type of question should have the size of 1. Response nr 1';
+
+    await expect(
+      service.getScore('mockQuizId', responses),
+    ).rejects.toHaveProperty('message', expectedErrorMessage);
+  });
+
+  it('d', async () => {
+    const mockQuestions: Question[] = [
+      {
+        id: '2',
+        body: 'What is a number?',
+        answers: ['1', '2', '3', 'asdsa'],
+        questionType: QuestionType.MultipleAnswer,
+        rightAnswers: ['1', '2', '3'],
+        quizId: '1',
+        quiz: null,
+      },
+    ];
+
+    const responses: QuestionResponse[] = [
+      {
+        questionId: '2',
+        answers: ['e', 'a', 'c', 'd', 'e'],
+      },
+    ];
+
+    jest
+      .spyOn(questionRepository, 'findBy')
+      .mockResolvedValueOnce(mockQuestions);
+
+    expect(service.getScore('mockQuizId', responses)).rejects.toThrow(
+      BadRequestException,
+    );
+
+    jest
+      .spyOn(questionRepository, 'findBy')
+      .mockResolvedValueOnce(mockQuestions);
+    const expectedErrorMessage =
+      'Array of answers for a multiple correct answer type of question should have the size of 1-(number of possible answers). Response nr 1';
+
+    await expect(
+      service.getScore('mockQuizId', responses),
+    ).rejects.toHaveProperty('message', expectedErrorMessage);
+  });
+
+  it('e', async () => {
+    const mockQuestions: Question[] = [
+      {
+        id: '2',
+        body: 'What is a number?',
+        answers: ['1', '2', '3'],
+        questionType: QuestionType.Sort,
+        rightAnswers: ['1', '2', '3'],
+        quizId: '1',
+        quiz: null,
+      },
+    ];
+
+    const responses: QuestionResponse[] = [
+      {
+        questionId: '2',
+        answers: ['e', 'a', 'c', 'd', 'e'],
+      },
+    ];
+
+    jest
+      .spyOn(questionRepository, 'findBy')
+      .mockResolvedValueOnce(mockQuestions);
+
+    expect(service.getScore('mockQuizId', responses)).rejects.toThrow(
+      BadRequestException,
+    );
+
+    jest
+      .spyOn(questionRepository, 'findBy')
+      .mockResolvedValueOnce(mockQuestions);
+    const expectedErrorMessage =
+      'Array of answers for a sort answers type of question should have the size of (number of possible answers). Response nr 1';
+
+    await expect(
+      service.getScore('mockQuizId', responses),
+    ).rejects.toHaveProperty('message', expectedErrorMessage);
+  });
+
+  it('f', async () => {
+    const mockQuestions: Question[] = [
+      {
+        id: '2',
+        body: 'What is a number?',
+        answers: ['1', '2', '3'],
+        questionType: QuestionType.TextAnswer,
+        rightAnswers: ['1'],
+        quizId: '1',
+        quiz: null,
+      },
+    ];
+
+    const responses: QuestionResponse[] = [
+      {
+        questionId: '2',
+        answers: ['e', 'a', 'c', 'd', 'e'],
+      },
+    ];
+
+    jest
+      .spyOn(questionRepository, 'findBy')
+      .mockResolvedValueOnce(mockQuestions);
+
+    expect(service.getScore('mockQuizId', responses)).rejects.toThrow(
+      BadRequestException,
+    );
+
+    jest
+      .spyOn(questionRepository, 'findBy')
+      .mockResolvedValueOnce(mockQuestions);
+    const expectedErrorMessage =
+      'Array of answers for a text answer type of question should have the size of 1. Response nr 1';
+
+    await expect(
+      service.getScore('mockQuizId', responses),
+    ).rejects.toHaveProperty('message', expectedErrorMessage);
+  });
+
   afterAll(() => {
     jest.restoreAllMocks();
   });
