@@ -5,7 +5,7 @@ import { Question, QuestionType } from '../models/Question';
 import { Field, Int, ObjectType } from '@nestjs/graphql';
 import { QuestionResponse } from '../input types/QuestionResponseType';
 
-function stringToAnswer(input: string): string {
+export function stringToAnswer(input: string): string {
   input = input.replace(/[^\w']+/g, '');
 
   input = input.toLowerCase();

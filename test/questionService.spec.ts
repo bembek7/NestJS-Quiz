@@ -1,4 +1,4 @@
-import { QuestionService, Score } from '../src/services/QuestionService';
+import { QuestionService, stringToAnswer } from '../src/services/QuestionService';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -119,7 +119,7 @@ describe('QuestionService', () => {
     ).rejects.toHaveProperty('message', expectedErrorMessage);
   });
 
-  it('a', async () => {
+  it('getScore should throw exception,  not equal lists', async () => {
     const mockQuestions: Question[] = [
       {
         id: '1',
@@ -175,7 +175,7 @@ describe('QuestionService', () => {
     ).rejects.toHaveProperty('message', expectedErrorMessage);
   });
 
-  it('b', async () => {
+  it('getScore should throw exception,  wrong questionId given', async () => {
     const mockQuestions: Question[] = [
       {
         id: '1',
@@ -215,7 +215,7 @@ describe('QuestionService', () => {
     ).rejects.toHaveProperty('message', expectedErrorMessage);
   });
 
-  it('c', async () => {
+  it('getScore should throw exception,  single correct answer', async () => {
     const mockQuestions: Question[] = [
       {
         id: '1',
@@ -254,7 +254,7 @@ describe('QuestionService', () => {
     ).rejects.toHaveProperty('message', expectedErrorMessage);
   });
 
-  it('d', async () => {
+  it('getScore should throw exception,  multiple correct answer', async () => {
     const mockQuestions: Question[] = [
       {
         id: '2',
@@ -293,7 +293,7 @@ describe('QuestionService', () => {
     ).rejects.toHaveProperty('message', expectedErrorMessage);
   });
 
-  it('e', async () => {
+  it('getScore should throw exception,  sort answers', async () => {
     const mockQuestions: Question[] = [
       {
         id: '2',
@@ -332,7 +332,7 @@ describe('QuestionService', () => {
     ).rejects.toHaveProperty('message', expectedErrorMessage);
   });
 
-  it('f', async () => {
+  it('getScore should throw exception,  text answer', async () => {
     const mockQuestions: Question[] = [
       {
         id: '2',
@@ -371,7 +371,7 @@ describe('QuestionService', () => {
     ).rejects.toHaveProperty('message', expectedErrorMessage);
   });
 
-  it('g', async () => {
+  it('getScore usual work2', async () => {
     const mockQuestions: Question[] = [
       {
         id: '1',
@@ -454,7 +454,7 @@ describe('QuestionService', () => {
     jest.restoreAllMocks();
   });
 
-  it('h', async () => {
+  it('getScore usual work2', async () => {
     const mockQuestions: Question[] = [
       {
         id: '1',
@@ -573,6 +573,15 @@ describe('QuestionService', () => {
     score = await service.getScore('QuizId', responses);
     expect(score.pointsMax).toEqual(4);
     expect(score.pointsObtained).toEqual(3);
+  });
+
+  it('getQuestionsByQuizId should return the questions array', async () => {
+    let result = stringToAnswer(' ..,.,.    AAbc  ');
+    expect(result).toEqual('aabc');
+    result = stringToAnswer(' .,/./,.Lk');
+    expect(result).toEqual('lk');
+    result = stringToAnswer(' \n\t string  ');
+    expect(result).toEqual('string');
   });
 
   afterAll(() => {
