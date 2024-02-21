@@ -1,4 +1,4 @@
-import { QuestionService } from '../src/services/QuestionService';
+import { QuestionService, Score } from '../src/services/QuestionService';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -369,6 +369,210 @@ describe('QuestionService', () => {
     await expect(
       service.getScore('mockQuizId', responses),
     ).rejects.toHaveProperty('message', expectedErrorMessage);
+  });
+
+  it('g', async () => {
+    const mockQuestions: Question[] = [
+      {
+        id: '1',
+        body: 'What is a number?',
+        answers: ['1', '2', '3'],
+        questionType: QuestionType.TextAnswer,
+        rightAnswers: ['1'],
+        quizId: '1',
+        quiz: null,
+      },
+      {
+        id: '2',
+        body: 'What is the capital of France?',
+        answers: ['Berlin', 'Madrid', 'Paris', 'Rome'],
+        questionType: QuestionType.SingleAnswer,
+        rightAnswers: ['Paris'],
+        quizId: '1',
+        quiz: null,
+      },
+    ];
+
+    let responses: QuestionResponse[] = [
+      {
+        questionId: '1',
+        answers: ['1'],
+      },
+      {
+        questionId: '2',
+        answers: ['Paris'],
+      },
+    ];
+
+    jest
+      .spyOn(questionRepository, 'findBy')
+      .mockResolvedValueOnce(mockQuestions);
+
+    let score = await service.getScore('QuizId', responses);
+    expect(score.pointsMax).toEqual(2);
+    expect(score.pointsObtained).toEqual(2);
+    responses = [
+      {
+        questionId: '1',
+        answers: [''],
+      },
+      {
+        questionId: '2',
+        answers: ['Paris'],
+      },
+    ];
+
+    jest
+      .spyOn(questionRepository, 'findBy')
+      .mockResolvedValueOnce(mockQuestions);
+
+    score = await service.getScore('QuizId', responses);
+    expect(score.pointsMax).toEqual(2);
+    expect(score.pointsObtained).toEqual(1);
+
+    responses = [
+      {
+        questionId: '1',
+        answers: ['2'],
+      },
+      {
+        questionId: '2',
+        answers: ['Rome'],
+      },
+    ];
+
+    jest
+      .spyOn(questionRepository, 'findBy')
+      .mockResolvedValueOnce(mockQuestions);
+
+    score = await service.getScore('QuizId', responses);
+    expect(score.pointsMax).toEqual(2);
+    expect(score.pointsObtained).toEqual(0);
+  });
+
+  afterAll(() => {
+    jest.restoreAllMocks();
+  });
+
+  it('h', async () => {
+    const mockQuestions: Question[] = [
+      {
+        id: '1',
+        body: 'What is a number?',
+        answers: ['1', '2', '3'],
+        questionType: QuestionType.TextAnswer,
+        rightAnswers: ['1'],
+        quizId: '1',
+        quiz: null,
+      },
+      {
+        id: '2',
+        body: 'What is the capital of France?',
+        answers: ['Berlin', 'Madrid', 'Paris', 'Rome'],
+        questionType: QuestionType.MultipleAnswer,
+        rightAnswers: ['Paris', 'Madrid', 'Rome'],
+        quizId: '1',
+        quiz: null,
+      },
+      {
+        id: '3',
+        body: 'What is the capital of France?',
+        answers: ['Berlin', 'Madrid', 'Paris', 'Rome'],
+        questionType: QuestionType.SingleAnswer,
+        rightAnswers: ['Paris'],
+        quizId: '1',
+        quiz: null,
+      },
+      {
+        id: '4',
+        body: 'What is the capital of France?',
+        answers: ['Berlin', 'Madrid', 'Paris', 'Rome'],
+        questionType: QuestionType.Sort,
+        rightAnswers: ['Berlin', 'Paris', 'Madrid', 'Rome'],
+        quizId: '1',
+        quiz: null,
+      },
+    ];
+
+    let responses: QuestionResponse[] = [
+      {
+        questionId: '2',
+        answers: ['Paris', 'Madrid', 'Rome'],
+      },
+      {
+        questionId: '1',
+        answers: ['1'],
+      },
+      {
+        questionId: '4',
+        answers: ['Berlin', 'Paris', 'Madrid', 'Rome'],
+      },
+      {
+        questionId: '3',
+        answers: ['Paris'],
+      },
+    ];
+
+    jest
+      .spyOn(questionRepository, 'findBy')
+      .mockResolvedValueOnce(mockQuestions);
+
+    let score = await service.getScore('QuizId', responses);
+    expect(score.pointsMax).toEqual(4);
+    expect(score.pointsObtained).toEqual(4);
+    responses = [
+      {
+        questionId: '2',
+        answers: ['Paris', '', 'Rome'],
+      },
+      {
+        questionId: '1',
+        answers: [' '],
+      },
+      {
+        questionId: '4',
+        answers: ['Berlin', 'Paris', 'Madrid', 'Rome'],
+      },
+      {
+        questionId: '3',
+        answers: ['Paris'],
+      },
+    ];
+
+    jest
+      .spyOn(questionRepository, 'findBy')
+      .mockResolvedValueOnce(mockQuestions);
+
+    score = await service.getScore('QuizId', responses);
+    expect(score.pointsMax).toEqual(4);
+    expect(score.pointsObtained).toEqual(2);
+
+    responses = [
+      {
+        questionId: '2',
+        answers: ['Paris', 'Madrid', 'Rome'],
+      },
+      {
+        questionId: '1',
+        answers: ['1'],
+      },
+      {
+        questionId: '4',
+        answers: ['Paris', 'Berlin', 'Madrid', 'Rome'],
+      },
+      {
+        questionId: '3',
+        answers: ['Paris'],
+      },
+    ];
+
+    jest
+      .spyOn(questionRepository, 'findBy')
+      .mockResolvedValueOnce(mockQuestions);
+
+    score = await service.getScore('QuizId', responses);
+    expect(score.pointsMax).toEqual(4);
+    expect(score.pointsObtained).toEqual(3);
   });
 
   afterAll(() => {
