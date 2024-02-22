@@ -6,10 +6,8 @@ import { Quiz } from './models/Quiz';
 import { QuizzesModule } from './modules/quizzes.module';
 import { QuestionsModule } from './modules/questions.module';
 import { Question } from './models/Question';
-import * as dotenv from 'dotenv';
-import * as path from 'path';
-
-dotenv.config({ path: path.resolve(__dirname, '../db.env') });
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { DataSource } from 'typeorm';
 
 @Module({
   imports: [
@@ -17,16 +15,23 @@ dotenv.config({ path: path.resolve(__dirname, '../db.env') });
       driver: ApolloDriver,
       autoSchemaFile: true,
     }),
-    TypeOrmModule.forRoot({
-      type: process.env.DB_TYPE as any,
-      host: process.env.DB_HOST,
-      port: parseInt(process.env.DB_PORT, 10),
-      username: process.env.DB_USERNAME,
-      password: process.env.DB_PASSWORD,
-      database: process.env.DB_DATABASE,
-      entities: [Quiz, Question],
-      synchronize: true,
-      autoLoadEntities: true,
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule.forRoot({ envFilePath: 'db.env' })],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => ({
+        type: 'postgres',
+        host: configService.get('HOST'),
+        port: +configService.get('PORT'),
+        username: configService.get('USERNAME'),
+        password: configService.get('PASSWORD'),
+        database: configService.get('DATABASE'),
+        entities: [Quiz, Question],
+        synchronize: true,
+      }),
+      dataSourceFactory: async (options) => {
+        const dataSource = await new DataSource(options).initialize();
+        return dataSource;
+      },
     }),
     QuizzesModule,
     QuestionsModule,
