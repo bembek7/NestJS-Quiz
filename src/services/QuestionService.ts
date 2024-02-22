@@ -175,8 +175,4 @@ export class QuestionService {
 
     return result;
   }
-
-  async deleteAllQuestions() {
-    return this.questionsRepository.clear();
-  }
 }

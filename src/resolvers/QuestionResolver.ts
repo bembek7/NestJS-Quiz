@@ -32,9 +32,4 @@ export class QuestionResolver {
   ) {
     return this.questionService.getScore(quizId, responses);
   }
-
-  @Mutation(returns => [Question], { nullable: true })
-  deleteAllQuestions() {
-    return this.questionService.deleteAllQuestions();
-  }
 }
