@@ -1,0 +1,39 @@
+query get_questions{
+  getQuestions{
+    id
+  	questionType
+    body
+    answers
+    rightAnswers
+    quizId
+  }
+}
+
+query get_quizzes{
+  getQuizzes{
+    id
+    name
+  }
+}
+
+query get_questions_by_quiz_id{
+  getQuestionsByQuizId(quizId: "1"){
+    id
+  	questionType
+    body
+    answers
+    rightAnswers
+    quizId
+  }
+}
+
+query get_questions_by_quiz_name{
+  getQuestionsByQuizName(quizName: "testowy 1"){
+    id
+  	questionType
+    body
+    answers
+    rightAnswers
+    quizId
+  }
+}
