@@ -1,0 +1,35 @@
+query get_score1 {
+  getScore(quizId: 1, responses: [
+    {questionId: "1", answers: ["Paris"]}
+    {questionId: "2", answers: ["Python", "Java", "Ruby"]}
+    {questionId: "3", answers: ["Declaration of Independence", "World War II", "First Moon Landing"]}
+    {questionId: "4", answers: ["fine"]}
+  ]) {
+    pointsObtained
+    pointsMax
+  }
+}
+
+query get_score2 {
+  getScore(quizId: 2, responses: [
+    {questionId: "5", answers: ["Berlin"]}
+    {questionId: "6", answers: ["C"]}
+    {questionId: "7", answers: ["Red", "Green", "Blue"]}
+    {questionId: "8", answers: ["Madrid"]}
+  ]) {
+    pointsObtained
+    pointsMax
+  }
+}
+
+query get_score3 {
+  getScore(quizId: 3, responses: [
+    {questionId: "9", answers: ["Jupiter"]}
+    {questionId: "10", answers: ["Dog", "Cat"]}
+    {questionId: "11", answers: ["Hydrogen", "Carbon", "Oxygen",]}
+    {questionId: "12", answers: ["Ottawa"]}
+  ]) {
+    pointsObtained
+    pointsMax
+  }
+}
