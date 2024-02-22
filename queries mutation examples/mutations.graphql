@@ -1,0 +1,175 @@
+mutation delete {
+  deleteAllQuizzes
+  {
+    quizzesDeleted
+    message
+  }
+}
+
+mutation create1{
+  createQuiz(createQuizData: { quiz: { name: "testowy 1"}, questions:
+  	[
+    	{
+        body: "What is the capital of France?",
+      	questionType: SingleAnswer,
+        answers: [
+          "London",
+        	"Paris",
+        	"Rome",
+        	"Madrid",
+        ]
+        rightAnswers: [
+          "Paris",
+        ],
+      }
+      {
+        body: "Which of the following programming languages are object-oriented?",
+      	questionType: MultipleAnswer,
+        answers: [
+          "Java",
+          "C",
+          "Python",
+          "Ruby",
+        ]
+        rightAnswers: [
+          "Java",
+          "Python",
+          "Ruby",
+        ],
+      }
+      {
+        body: "Arrange the following events in chronological order.",
+      	questionType: Sort,
+        answers: [
+          "Declaration of Independence",
+          "World War II",
+          "First Moon Landing",
+        ]
+        rightAnswers: [
+          "Declaration of Independence",
+          "World War II",
+          "First Moon Landing",
+        ],
+      }
+      {
+        body: "How are you?",
+      	questionType: TextAnswer,
+        rightAnswers: [ "fine", ],
+      }
+  	]
+	}) {
+    id
+    name
+  }
+}
+
+mutation create2{
+  createQuiz(createQuizData: { quiz: { name: "testowy 2"}, questions:
+  	[
+    	{
+        body: "What is the capital of Germany?",
+      	questionType: SingleAnswer,
+        answers: [
+          "London",
+        	"Paris",
+        	"Berlin",
+        	"Madrid",
+        ]
+        rightAnswers: [
+          "Berlin",
+        ],
+      }
+      {
+        body: "Which of the following programming languages are procedural?",
+      	questionType: MultipleAnswer,
+        answers: [
+          "Java",
+          "C",
+          "Python",
+          "Ruby",
+        ]
+        rightAnswers: [
+          "C",
+        ],
+      }
+      {
+        body: "Arrange the following colors in the visible light spectrum.",
+      	questionType: Sort,
+        answers: [
+          "Red",
+          "Blue",
+          "Green",
+        ]
+        rightAnswers: [
+          "Red",
+          "Green",
+          "Blue",
+        ],
+      }
+      {
+        body: "What is the capital of Spain?",
+      	questionType: TextAnswer,
+        rightAnswers: [ "Madrid", ],
+      }
+  	]
+	}) {
+    id
+    name
+  }
+}
+
+mutation create3{
+  createQuiz(createQuizData: { quiz: { name: "testowy 3"}, questions:
+  	[
+    	{
+        body: "What is the largest planet in our solar system?",
+      	questionType: SingleAnswer,
+        answers: [
+          "Mars",
+        	"Jupiter",
+        	"Venus",
+        	"Saturn",
+        ]
+        rightAnswers: [
+          "Jupiter",
+        ],
+      }
+      {
+        body: "Which of the following animals are mammals?",
+      	questionType: MultipleAnswer,
+        answers: [
+          "Fish",
+          "Dog",
+          "Snake",
+          "Cat",
+        ]
+        rightAnswers: [
+          "Dog",
+          "Cat",
+        ],
+      }
+      {
+        body: "Arrange the following elements in increasing atomic number.",
+      	questionType: Sort,
+        answers: [
+          "Carbon",
+          "Oxygen",
+          "Hydrogen",
+        ]
+        rightAnswers: [
+          "Hydrogen",
+          "Carbon",
+          "Oxygen",
+        ],
+      }
+      {
+        body: "What is the capital of Canada?",
+      	questionType: TextAnswer,
+        rightAnswers: [ "Ottawa", ],
+      }
+  	]
+	}) {
+    id
+    name
+  }
+}
