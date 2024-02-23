@@ -82,16 +82,16 @@ export class QuestionService {
 
       let noScore = false;
 
-      // input validation
       switch (question.questionType) {
         // empty string is always allowed since user may just not answer the question
-        // not restricted to a, b, c, d characters since question may use other type of enumeration
         case QuestionType.SingleAnswer: {
+          // input validation
           if (response.answers.length > 1) {
             throw new BadRequestException(
               `Array of answers for a single correct answer type of question should have the size of 1. Response nr ${responseCounter}`,
             );
           }
+          // answer check
           if (
             stringToAnswer(response.answers[0]) !==
             stringToAnswer(question.rightAnswers[0])
@@ -102,6 +102,7 @@ export class QuestionService {
           break;
         }
         case QuestionType.MultipleAnswer: {
+          // input validation
           if (
             response.answers.length > question.answers.length ||
             response.answers.length < 1
@@ -110,6 +111,7 @@ export class QuestionService {
               `Array of answers for a multiple correct answer type of question should have the size of 1-(number of possible answers). Response nr ${responseCounter}`,
             );
           }
+          // answer check
           if (response.answers.length !== question.rightAnswers.length) {
             noScore = true;
             break;
@@ -128,6 +130,7 @@ export class QuestionService {
           break;
         }
         case QuestionType.Sort: {
+          // input validation
           if (
             response.answers.length !== question.answers.length &&
             response.answers.length !== 0
@@ -136,6 +139,7 @@ export class QuestionService {
               `Array of answers for a sort answers type of question should have the size of (number of possible answers). Response nr ${responseCounter}`,
             );
           }
+          // answer check
           for (let index = 0; index < response.answers.length; index++) {
             const answer = response.answers[index];
             const rightAnswer = question.rightAnswers[index];
@@ -147,11 +151,13 @@ export class QuestionService {
           break;
         }
         case QuestionType.TextAnswer: {
+          // input validation
           if (response.answers.length > 1) {
             throw new BadRequestException(
               `Array of answers for a text answer type of question should have the size of 1. Response nr ${responseCounter}`,
             );
           }
+          // answer check
           if (
             stringToAnswer(response.answers[0]) !==
             stringToAnswer(question.rightAnswers[0])
