@@ -30,10 +30,11 @@ export class QuizService {
   async createQuiz(createQuizData: CreateQuizInput) {
     const { quiz, questions } = createQuizData;
 
-    // input validation
     let questionNr = 0;
     for (const question of questions) {
       questionNr++;
+
+      // input validation
       switch (question.questionType) {
         case QuestionType.SingleAnswer: {
           if (question.rightAnswers.length != 1) {
